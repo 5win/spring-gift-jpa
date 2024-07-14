@@ -10,8 +10,9 @@ import gift.jwt.JwtUtil;
 import gift.repository.MemberJpaDao;
 import gift.repository.ProductJpaDao;
 import gift.repository.WishlistJpaDao;
-import java.util.List;
 import java.util.NoSuchElementException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -65,10 +66,14 @@ public class MemberService {
      * @param email
      * @return
      */
-    public List<ProductDto> getAllWishlist(String email) {
-        Member member = memberJpaDao.findByEmail(email)
-            .orElseThrow(() -> new NoSuchElementException(ErrorMessage.MEMBER_NOT_EXISTS_MSG));
-        return member.getWishlist().stream().map(o -> new ProductDto(o.getProduct())).toList();
+    public Page<ProductDto> getAllWishlist(String email, Pageable pageable) {
+//        return wishlistJpaDao.findAllByEmail(email, pageable).stream()
+//            .map(o -> new ProductDto(o.getProduct())).toList();
+        return wishlistJpaDao.findAllByMember_Email(email, pageable)
+            .map(o -> new ProductDto(o.getProduct()));
+//        Member member = memberJpaDao.findByEmail(email)
+//            .orElseThrow(() -> new NoSuchElementException(ErrorMessage.MEMBER_NOT_EXISTS_MSG));
+//        return member.getWishlist().stream().map(o -> new ProductDto(o.getProduct())).toList();
     }
 
     /**

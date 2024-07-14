@@ -8,4 +8,5 @@ public interface MemberJpaDao extends JpaRepository<Member, Long> {
 
     Optional<Member> findByEmail(String email);
 
+//    Page<Member> findMemberWishWishlist(Pageable pageable);
 }

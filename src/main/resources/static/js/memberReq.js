@@ -80,9 +80,10 @@ function updateUI(isLoggedIn) {
 
 
 
-function getWishlist() {
+function getWishlist(pageNumber) {
+    pageNumber = pageNumber - 1;
     $.ajax({
-        url: "/api/members/wishlist",
+        url: `/api/members/wishlist?page=${pageNumber}`,
         type: "GET",
         headers: {
         'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -90,23 +91,7 @@ function getWishlist() {
         success: function(data) {
             var productList = $('#wish-list');
             productList.empty();
-            $.each(data, function(index, object) {
-                var product = '<tr>';
-                product += '<td>' + object.id + '</td>';
-                product += '<td>' + object.name + '</td>';
-                product += '<td>' + object.price + '</td>';
-                product += '<td>';
-                product += '<a href="' + object.imageUrl + '">';
-                product += '<img src="' + object.imageUrl + '" alt="Not found image" style="width: 40px; height: 40px;" />';
-                product += '</a>';
-                product += '</td>';
-                product += '<td>';
-                product += '<button class="delete-button btn btn-danger" data-product-id="' + object.id + '">삭제</button>';
-                product += '</td>';
-                product += '</tr>';
-                productList.append(product);
-            });
-            
+            $("#wish-list").html(data);
         },
         error: function (request, status, error) {
             alert(request.responseText);
@@ -124,7 +109,7 @@ function deleteWishlist(productId) {
         url: `/api/members/wishlist/${productId}`,
         type: 'DELETE',
         headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('token')
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
         },
         success: function(response) {
             alert(response);
